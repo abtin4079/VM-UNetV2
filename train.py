@@ -92,9 +92,14 @@ def main(config, parser):
             load_ckpt_path=parser.pretrained_weight_path,
             deep_supervision = model_cfg['deep_supervision'],
         )
-        model.load_from()
-        
+        model.load_from()    
     else: raise Exception('network in not right!')
+    print(111111)
+    device = 'cpu:0'
+    if torch.cuda.is_available():
+      print('gpu is available')
+      device = 'cuda:0'
+
     model = model.cuda()
 
     cal_params_flops(model, 256, logger)

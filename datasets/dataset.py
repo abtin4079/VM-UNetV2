@@ -20,21 +20,23 @@ class Polyp_datasets(Dataset):
     def __init__(self, path_Data, config, train=True):
         super(Polyp_datasets, self)
         if train:
-            images_list = sorted(os.listdir(path_Data+'/train/img/'))
-            masks_list = sorted(os.listdir(path_Data+'/train/mask/'))
+            images_list = os.path.join(path_Data, 'train/img')
+            masks_list = os.path.join(path_Data, 'train/mask')
             self.data = []
-            for i in range(len(images_list)):
-                img_path = path_Data+'/train/img/' + images_list[i]
-                mask_path = path_Data+'/train/mask/' + masks_list[i]
+            for p in os.listdir(images_list):
+                name = p.split('.')[0]
+                img_path = path_Data+'/train/img/' + name + '.jpg'
+                mask_path = path_Data+'/train/mask/' + name + '.jpg'
                 self.data.append([img_path, mask_path])
             self.transformer = config.train_transformer
         else: 
-            images_list = sorted(os.listdir(path_Data+'/test/img/'))
-            masks_list = sorted(os.listdir(path_Data+'/test/mask/'))
+            images_list = os.path.join(path_Data, 'test/img')
+            masks_list = os.path.join(path_Data, 'test/mask')
             self.data = []
-            for i in range(len(images_list)):
-                img_path = path_Data+'/test/img/' + images_list[i]
-                mask_path = path_Data+'/test/mask' + masks_list[i]
+            for p in os.listdir(images_list):
+                name = p.split('.')[0]
+                img_path = path_Data+'/test/img/' + name + '.jpg' 
+                mask_path = path_Data+'/test/mask/' + name + '.jpg' 
                 self.data.append([img_path, mask_path])
             self.transformer = config.test_transformer
         

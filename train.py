@@ -19,7 +19,7 @@ warnings.filterwarnings("ignore")
 import argparse
 
 def main(config, parser):
-
+    print(torch.cuda.is_available())
     print('#----------Creating logger----------#')
     sys.path.append(config.work_dir + '/')
     log_dir = os.path.join(config.work_dir, 'log')
@@ -95,10 +95,10 @@ def main(config, parser):
         model.load_from()    
     else: raise Exception('network in not right!')
     print(111111)
+
     device = 'cpu:0'
-    if torch.cuda.is_available():
-      print('gpu is available')
-      device = 'cuda:0'
+    print(torch.cuda.is_available())
+    device = 'cuda:0'
 
     model = model.cuda()
 

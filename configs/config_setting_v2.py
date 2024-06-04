@@ -20,20 +20,22 @@ class setting_config:
         'deep_supervision': True,
     }
 
-    datasets = 'polyp'
-    if datasets == 'isic18':
-        data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/isic/isic2018/'
-    elif datasets == 'isic17':
-        data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/isic/isic2017/'
-    elif datasets == 'polyp':
-        data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/polyp_unet2/'
-    elif datasets == 'gim':
-        data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/endoscopy/endoscopy_sod/'
-    elif datasets == 'isic_all':
-        data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/isic_all/'
-    else:
-        raise Exception('datasets in not right!')
+    # datasets = 'polyp'
+    # if datasets == 'isic18':
+    #     data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/isic/isic2018/'
+    # elif datasets == 'isic17':
+    #     data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/isic/isic2017/'
+    # elif datasets == 'polyp':
+    #     data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/polyp_unet2/'
+    # elif datasets == 'gim':
+    #     data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/endoscopy/endoscopy_sod/'
+    # elif datasets == 'isic_all':
+    #     data_path = '/raid/code/mamba_all/VM-UNet/data/zd-medic/isic_all/'
+    # else:
+    #     raise Exception('datasets in not right!')
 
+
+    datasets = 'Kvasir'
     criterion = BceDiceLoss(wb=1, wd=1)
 
     pretrained_path = './pre_trained/'
@@ -49,8 +51,8 @@ class setting_config:
     rank = None
     amp = False
     gpu_id = '2'
-    batch_size = 80
-    epochs = 300
+    batch_size = 64
+    epochs = 100
 
     work_dir = 'results/' + network + '_' + datasets + '_' + datetime.now().strftime('%A_%d_%B_%Y_%Hh_%Mm_%Ss') + '/'
 
@@ -73,7 +75,7 @@ class setting_config:
         myResize(input_size_h, input_size_w)
     ])
 
-    opt = 'AdamW'
+    opt = 'SGD'
     assert opt in ['Adadelta', 'Adagrad', 'Adam', 'AdamW', 'Adamax', 'ASGD', 'RMSprop', 'Rprop', 'SGD'], 'Unsupported optimizer!'
     if opt == 'Adadelta':
         lr = 0.01 # default: 1.0 – coefficient that scale delta before it is applied to the parameters

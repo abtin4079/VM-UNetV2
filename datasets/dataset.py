@@ -17,31 +17,31 @@ from configs.config_setting import setting_config # debug use only
 
 # ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']
 class Polyp_datasets(Dataset):
-    def __init__(self, path_Data, config, train=True, test_dataset = 'CVC-300'):
+    def __init__(self, path_Data, config, train=True):
         super(Polyp_datasets, self)
         if train:
-            images_list = sorted(os.listdir(path_Data+'TrainDataset/images/'))
-            masks_list = sorted(os.listdir(path_Data+'TrainDataset/masks/'))
+            images_list = sorted(os.listdir(path_Data+'train/img/'))
+            masks_list = sorted(os.listdir(path_Data+'train/mask/'))
             self.data = []
             for i in range(len(images_list)):
-                img_path = path_Data+'TrainDataset/images/' + images_list[i]
-                mask_path = path_Data+'TrainDataset/masks/' + masks_list[i]
+                img_path = path_Data+'train/img/' + images_list[i]
+                mask_path = path_Data+'train/mask/' + masks_list[i]
                 self.data.append([img_path, mask_path])
             self.transformer = config.train_transformer
-        else: # test 数据集需要 加 test 数据集的名称
-            images_list = sorted(os.listdir(path_Data+'TestDataset/' + test_dataset + '/images/'))
-            masks_list = sorted(os.listdir(path_Data+'TestDataset/' + test_dataset + '/masks/'))
+        else: 
+            images_list = sorted(os.listdir(path_Data+'test/img/'))
+            masks_list = sorted(os.listdir(path_Data+'test/mask/'))
             self.data = []
             for i in range(len(images_list)):
-                img_path = path_Data+'TestDataset/' + test_dataset + '/images/' + images_list[i]
-                mask_path = path_Data+'TestDataset/' + test_dataset + '/masks/' + masks_list[i]
+                img_path = path_Data+'test/img/' + images_list[i]
+                mask_path = path_Data+'test/mask' + masks_list[i]
                 self.data.append([img_path, mask_path])
             self.transformer = config.test_transformer
         
     def __getitem__(self, index):
         img_path, msk_path = self.data[index]
         img = np.array(Image.open(img_path).convert('RGB'))
-        # isic 数据集未做二值化处理
+        
         msk = np.expand_dims(np.array(Image.open(msk_path).convert('L')), axis=2) / 255
         img, msk = self.transformer((img, msk))
         return img, msk

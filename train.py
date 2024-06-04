@@ -16,9 +16,9 @@ from configs.config_setting_v2 import setting_config
 import warnings
 warnings.filterwarnings("ignore")
 
+import argparse
 
-
-def main(config):
+def main(config, parser):
 
     print('#----------Creating logger----------#')
     sys.path.append(config.work_dir + '/')
@@ -53,7 +53,7 @@ def main(config):
 
     print('#----------Preparing dataset----------#')
     # train_dataset = NPY_datasets(config.data_path, config, train=True)
-    train_dataset = Polyp_datasets(config.data_path, config, train=True)
+    train_dataset = Polyp_datasets(parser.data_path, config, train=True)
     
     train_loader = DataLoader(train_dataset,
                                 batch_size=config.batch_size, 
@@ -62,20 +62,20 @@ def main(config):
                                 num_workers=config.num_workers)
     
     
-    # val_dataset = NPY_datasets(config.data_path, config, train=False)
+    # val_dataset = NPY_datasets(parser.data_path, config, train=False)
     
     
-    val_loader_dict = {}
-    for dataset in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
-        val_dataset = Polyp_datasets(config.data_path, config, train=False, test_dataset=dataset)
-        val_loader = DataLoader(val_dataset,
-                                batch_size=1,
-                                shuffle=False,
-                                pin_memory=True, 
-                                num_workers=config.num_workers,
-                                drop_last=True)
+
+
+    val_dataset = Polyp_datasets(parser.data_path, config, train=False)
+    val_loader = DataLoader(val_dataset,
+                            batch_size=1,
+                            shuffle=False,
+                            pin_memory=True, 
+                            num_workers=config.num_workers,
+                            drop_last=True)
         
-        val_loader_dict[dataset] = val_loader
+
 
 
 
@@ -88,7 +88,8 @@ def main(config):
             depths=model_cfg['depths'],
             depths_decoder=model_cfg['depths_decoder'],
             drop_path_rate=model_cfg['drop_path_rate'],
-            load_ckpt_path=model_cfg['load_ckpt_path'],
+            #load_ckpt_path=model_cfg['load_ckpt_path'],
+            load_ckpt_path=parser.pretrained_weight_path,
             deep_supervision = model_cfg['deep_supervision'],
         )
         model.load_from()
@@ -156,19 +157,19 @@ def main(config):
         )
 
         loss_all = []
-        for name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
-            val_loader_t = val_loader_dict[name]
+        #for name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
+            #val_loader_t = val_loader_dict[name]
             
-            loss_t = val_one_epoch(
-                    val_loader_t,
-                    model,
-                    criterion,
-                    epoch,
-                    logger,
-                    config,
-                    val_data_name=name
-                )
-            loss_all.append(loss_t)
+        loss_t = val_one_epoch(
+                val_loader,
+                model,
+                criterion,
+                epoch,
+                logger,
+                config,
+                val_data_name='Kvasir'
+            )
+        loss_all.append(loss_t)
             
         loss = np.mean(loss_all)
         if loss < min_loss:
@@ -192,16 +193,16 @@ def main(config):
         print('#----------Testing----------#')
         best_weight = torch.load(config.work_dir + 'checkpoints/best.pth', map_location=torch.device('cpu'))
         model.load_state_dict(best_weight)
-        for name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
-            val_loader_t = val_loader_dict[name]
-            loss = test_one_epoch(
-                val_loader_t,
-                model,
-                criterion,
-                logger,
-                config,
-                test_data_name=name
-            )
+        #for name in ['CVC-300', 'CVC-ClinicDB', 'Kvasir', 'CVC-ColonDB', 'ETIS-LaribPolypDB']:
+            #val_loader_t = val_loader_dict[name]
+        loss = test_one_epoch(
+            val_loader,
+            model,
+            criterion,
+            logger,
+            config,
+            test_data_name='Kvasir'
+        )
         os.rename(
             os.path.join(checkpoint_dir, 'best.pth'),
             os.path.join(checkpoint_dir, f'best-epoch{min_epoch}-loss{min_loss:.4f}.pth')
@@ -210,4 +211,8 @@ def main(config):
 
 if __name__ == '__main__':
     config = setting_config
-    main(config)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_path', type=str, default=None)
+    parser.add_argument('--pretrained_weight_path', type=str, default=None)
+    parser = parser.parse_args()
+    main(config, parser)

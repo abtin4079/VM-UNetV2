@@ -62,7 +62,7 @@ class setting_config:
     threshold = 0.5
 
     train_transformer = transforms.Compose([
-        myNormalize(datasets, train=True), #
+        #myNormalize(datasets, train=True), #
         myToTensor(),
         myRandomHorizontalFlip(p=0.5),
         myRandomVerticalFlip(p=0.5),
@@ -70,7 +70,7 @@ class setting_config:
         myResize(input_size_h, input_size_w)
     ])
     test_transformer = transforms.Compose([
-        myNormalize(datasets, train=False),
+        #myNormalize(datasets, train=False),
         myToTensor(),
         myResize(input_size_h, input_size_w)
     ])

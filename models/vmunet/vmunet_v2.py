@@ -211,7 +211,7 @@ class VMUNetV2(nn.Module):
         if self.load_ckpt_path is not None:
             model_dict = self.vmunet.state_dict()
             modelCheckpoint = torch.load(self.load_ckpt_path)
-            pretrained_dict = modelCheckpoint['model']
+            pretrained_dict = modelCheckpoint['state_dict']
             # 过滤操作
             new_dict = {k: v for k, v in pretrained_dict.items() if k in model_dict.keys()}
             model_dict.update(new_dict)

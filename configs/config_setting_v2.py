@@ -40,8 +40,8 @@ class setting_config:
 
     pretrained_path = './pre_trained/'
     num_classes = 1
-    input_size_h = 256
-    input_size_w = 256
+    input_size_h = 224
+    input_size_w = 224
     input_channels = 3
     distributed = False
     local_rank = -1

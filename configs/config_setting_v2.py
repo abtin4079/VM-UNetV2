@@ -52,7 +52,7 @@ class setting_config:
     amp = False
     gpu_id = '2'
     batch_size = 64
-    epochs = 100
+    epochs = 300
 
     work_dir = 'results/' + network + '_' + datasets + '_' + datetime.now().strftime('%A_%d_%B_%Y_%Hh_%Mm_%Ss') + '/'
 
@@ -75,7 +75,7 @@ class setting_config:
         myResize(input_size_h, input_size_w)
     ])
 
-    opt = 'SGD'
+    opt = 'AdamW'
     assert opt in ['Adadelta', 'Adagrad', 'Adam', 'AdamW', 'Adamax', 'ASGD', 'RMSprop', 'Rprop', 'SGD'], 'Unsupported optimizer!'
     if opt == 'Adadelta':
         lr = 0.01 # default: 1.0 – coefficient that scale delta before it is applied to the parameters

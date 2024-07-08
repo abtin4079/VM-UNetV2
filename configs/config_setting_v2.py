@@ -51,7 +51,7 @@ class setting_config:
     rank = None
     amp = False
     gpu_id = '2'
-    batch_size = 64
+    batch_size = 10
     epochs = 300
 
     work_dir = 'results/' + network + '_' + datasets + '_' + datetime.now().strftime('%A_%d_%B_%Y_%Hh_%Mm_%Ss') + '/'

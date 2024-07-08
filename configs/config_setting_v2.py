@@ -36,8 +36,10 @@ class setting_config:
 
 
     datasets = 'Kvasir'
-    criterion = BceDiceLoss(wb=1, wd=1)
-
+    
+    #criterion = BceDiceLoss(wb=1, wd=1)
+    criterion = DiceLoss()
+    
     pretrained_path = './pre_trained/'
     num_classes = 1
     input_size_h = 224

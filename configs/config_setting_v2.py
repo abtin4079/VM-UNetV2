@@ -37,8 +37,8 @@ class setting_config:
 
     datasets = 'Kvasir'
     
-    #criterion = BceDiceLoss(wb=1, wd=1)
-    criterion = DiceLoss()
+    criterion = BceDiceLoss(wb=1, wd=1)
+    #criterion = DiceLoss()
     
     pretrained_path = './pre_trained/'
     num_classes = 1
@@ -56,7 +56,7 @@ class setting_config:
     batch_size = 10
     epochs = 300
 
-    work_dir = 'results/' + network + '_' + datasets + '_' + datetime.now().strftime('%A_%d_%B_%Y_%Hh_%Mm_%Ss') + '/'
+    work_dir = 'drive/MyDrive/kvasir/results/' + network + '_' + datasets + '_' + datetime.now().strftime('%A_%d_%B_%Y_%Hh_%Mm_%Ss') + '/'
 
     print_interval = 20
     val_interval = 2

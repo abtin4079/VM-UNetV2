@@ -21,6 +21,7 @@ import argparse
 def main(config, parser):
     print(torch.cuda.is_available())
     print('#----------Creating logger----------#')
+    os.chdir('..') #change to the parent path 
     sys.path.append(config.work_dir + '/')
     log_dir = os.path.join(config.work_dir, 'log')
     checkpoint_dir = os.path.join(config.work_dir, 'checkpoints')
@@ -29,7 +30,7 @@ def main(config, parser):
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
     if not os.path.exists(outputs):
-        os.makedirs(outputs)
+        os.makedirs(outputs) 
 
     global logger
     logger = get_logger('train', log_dir)
@@ -94,7 +95,7 @@ def main(config, parser):
         )
         model.load_from()    
     else: raise Exception('network in not right!')
-    print(111111)
+    #print(111111)
 
     device = 'cpu:0'
     print(torch.cuda.is_available())
@@ -179,6 +180,7 @@ def main(config, parser):
         loss = np.mean(loss_all)
         if loss < min_loss:
             torch.save(model.state_dict(), os.path.join(checkpoint_dir, 'best.pth'))
+            print(f'this epoch save the model in best.pth with loss = {loss}')
             min_loss = loss
             min_epoch = epoch
 

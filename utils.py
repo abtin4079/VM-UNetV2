@@ -347,7 +347,7 @@ class BceDiceLoss(nn.Module):
         self.dice = DiceLoss()
         self.wb = wb
         self.wd = wd
-
+        
     def forward(self, pred, target):
         bceloss = self.bce(pred, target)
         diceloss = self.dice(pred, target)

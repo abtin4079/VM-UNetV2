@@ -223,6 +223,7 @@ class VMUNetV2(nn.Module):
             print('Not loaded keys:', not_loaded_keys)
             print("encoder loaded finished!")
 
+############################################################################################################
             # model_dict = self.vmunet.state_dict()
             # modelCheckpoint = torch.load(self.load_ckpt_path)
             # # 下面 是 layers up 

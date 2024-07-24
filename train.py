@@ -90,7 +90,7 @@ def main(config, parser):
             depths_decoder=model_cfg['depths_decoder'],
             drop_path_rate=model_cfg['drop_path_rate'],
             #load_ckpt_path=model_cfg['load_ckpt_path'],
-            load_ckpt_path=parser.pretrained_weight_path,
+            load_ckpt_path=parser.pretrained_weight_path, # comment so we can use transfer learning
             deep_supervision = model_cfg['deep_supervision'],
         )
         model.load_from()    
@@ -138,6 +138,7 @@ def main(config, parser):
         min_loss, min_epoch, loss = checkpoint['min_loss'], checkpoint['min_epoch'], checkpoint['loss']
 
         log_info = f'resuming model from {resume_model}. resume_epoch: {saved_epoch}, min_loss: {min_loss:.4f}, min_epoch: {min_epoch}, loss: {loss:.4f}'
+        print(log_info)
         logger.info(log_info)
 
 
@@ -147,19 +148,19 @@ def main(config, parser):
     print('#----------Training----------#')
     for epoch in range(start_epoch, config.epochs + 1):
 
+    
         torch.cuda.empty_cache()
-
         step = train_one_epoch(
-            train_loader,
-            model,
-            criterion,
-            optimizer,
-            scheduler,
-            epoch,
-            step,
-            logger,
-            config,
-            writer
+                train_loader,
+                model,
+                criterion,
+                optimizer,
+                scheduler,
+                epoch,
+                step,
+                logger,
+                config,
+                writer
         )
 
         loss_all = []

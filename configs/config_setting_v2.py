@@ -59,7 +59,7 @@ class setting_config:
     work_dir = 'drive/MyDrive/kvasir/results/' + network + '_' + datasets + '_' + datetime.now().strftime('%A_%d_%B_%Y_%Hh_%Mm_%Ss') + '/'
 
     print_interval = 20
-    val_interval = 2
+    val_interval = 1
     save_interval = 10
     threshold = 0.5
 

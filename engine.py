@@ -4,7 +4,7 @@ import torch
 from torch.cuda.amp import autocast as autocast
 from sklearn.metrics import confusion_matrix
 from utils import save_imgs
-
+from metrics import *
 
 def train_one_epoch(train_loader,
                     model,
@@ -85,21 +85,27 @@ def val_one_epoch(test_loader,
         y_pre = np.where(preds>=config.threshold, 1, 0)
         y_true = np.where(gts>=0.5, 1, 0)
 
-        confusion = confusion_matrix(y_true, y_pre)
-        TN, FP, FN, TP = confusion[0,0], confusion[0,1], confusion[1,0], confusion[1,1] 
+        # confusion = confusion_matrix(y_true, y_pre)
+        # TN, FP, FN, TP = confusion[0,0], confusion[0,1], confusion[1,0], confusion[1,1] 
 
-        accuracy = float(TN + TP) / float(np.sum(confusion)) if float(np.sum(confusion)) != 0 else 0
-        sensitivity = float(TP) / float(TP + FN) if float(TP + FN) != 0 else 0
-        specificity = float(TN) / float(TN + FP) if float(TN + FP) != 0 else 0
-        f1_or_dsc = float(2 * TP) / float(2 * TP + FP + FN) if float(2 * TP + FP + FN) != 0 else 0
-        miou = float(TP) / float(TP + FP + FN) if float(TP + FP + FN) != 0 else 0
+        # accuracy = float(TN + TP) / float(np.sum(confusion)) if float(np.sum(confusion)) != 0 else 0
+        # sensitivity = float(TP) / float(TP + FN) if float(TP + FN) != 0 else 0
+        # specificity = float(TN) / float(TN + FP) if float(TN + FP) != 0 else 0
+        # f1_or_dsc = float(2 * TP) / float(2 * TP + FP + FN) if float(2 * TP + FP + FN) != 0 else 0
+        # miou = float(TP) / float(TP + FP + FN) if float(TP + FP + FN) != 0 else 0
+
+        accuracy = accuracy_score(y_true, y_pre)
+        _, recall, precision = all_score(y_true, y_pre)
+        miou = intersection_over_union(y_true, y_pre)
+        dsc = dice_similarity_coefficient(y_true, y_pre)
+
 
         if val_data_name is not None:
             log_info = f'val_datasets_name: {val_data_name}'
             print(log_info)
             logger.info(log_info)
-        log_info = f' val epoch: {epoch}, loss: {np.mean(loss_list):.4f}, miou: {miou}, f1_or_dsc: {f1_or_dsc}, accuracy: {accuracy}, \
-                specificity: {specificity}, sensitivity: {sensitivity}, confusion_matrix: {confusion}'
+        log_info = f' val epoch: {epoch}, loss: {np.mean(loss_list):.4f}, miou: {miou / len(test_loader)}, dsc: {dsc / len(test_loader)}, accuracy: {accuracy / len(test_loader)}, \
+                precision: {precision / len(test_loader)}, recall: {recall / len(test_loader)}'
         print(log_info)
         logger.info(log_info)
 

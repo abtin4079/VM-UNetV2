@@ -1,6 +1,8 @@
 import torch
-
+import numpy as np
 def intersection_over_union(pred, target):
+    if isinstance(y_pre, np.ndarray):
+        y_pre = torch.tensor(y_pre)
     pred = torch.sigmoid(pred)
     
     pred_binary = (pred > 0.5).float()  # Convert probabilities to binary predictions
@@ -16,6 +18,8 @@ def intersection_over_union(pred, target):
 
 
 def dice_similarity_coefficient(pred, target):
+    if isinstance(y_pre, np.ndarray):
+        y_pre = torch.tensor(y_pre)
     pred = torch.sigmoid(pred)
 
     pred = pred.contiguous().view(-1)
@@ -30,6 +34,8 @@ def dice_similarity_coefficient(pred, target):
     
 
 def accuracy_score(pred, target, threshold=0.5):
+    if isinstance(y_pre, np.ndarray):
+        y_pre = torch.tensor(y_pre)
     pred = torch.sigmoid(pred)
     
     pred_binary = (pred > threshold).float()  # Convert probabilities to binary predictions
@@ -44,6 +50,8 @@ def accuracy_score(pred, target, threshold=0.5):
 
 
 def all_score(pred, target, threshold=0.5):
+    if isinstance(y_pre, np.ndarray):
+        y_pre = torch.tensor(y_pre)
     pred = torch.sigmoid(pred)
     
     pred_binary = (pred > threshold).float()  # Convert probabilities to binary predictions

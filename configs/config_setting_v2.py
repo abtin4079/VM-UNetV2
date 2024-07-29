@@ -5,7 +5,7 @@ from datetime import datetime
 
 class setting_config:
     """
-    the config of training setting.
+    the config of training setting.  
     """
 
     network = 'vmunet-v2'
